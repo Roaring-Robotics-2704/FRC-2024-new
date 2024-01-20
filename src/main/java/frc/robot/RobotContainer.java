@@ -4,41 +4,32 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.CMDDrive;
-import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.LauncherConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.CMDDrive;
+import frc.robot.commands.LaunchNote;
+import frc.robot.commands.PrepareLaunch;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SUBShooter;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -50,6 +41,7 @@ public class RobotContainer {
   // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
     public static final CMDDrive driveRobotCommand = new CMDDrive();
+    public static final SUBShooter m_sUBShooter = new SUBShooter();
 
 SendableChooser<String> PathPlannerautoChooser = new SendableChooser<String>();
     SendableChooser<String> ChoreoautoChooser = new SendableChooser<String>();
@@ -60,7 +52,8 @@ SendableChooser<String> PathPlannerautoChooser = new SendableChooser<String>();
     public static SendableChooser<Boolean> rateLimitChooser = new SendableChooser<Boolean>();
 
   // The driver's controller
-  static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  public static CommandXboxController m_driverController1 = new CommandXboxController(OIConstants.kDriverControllerPort1);
+  public static CommandXboxController m_driverController2 = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -150,10 +143,19 @@ for (int i = 0; i < listOfFiles.length; i++) {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    m_driverController1.x()
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    m_driverController2.rightTrigger()
+        .whileTrue(
+            new PrepareLaunch(m_sUBShooter)
+                .withTimeout(LauncherConstants.kLauncherDelay)
+                .andThen(new LaunchNote(m_sUBShooter))
+                .handleInterrupt(() -> m_sUBShooter.stop()));
+
+    m_driverController2.leftTrigger()
+        .whileTrue(m_sUBShooter.getIntakeCommand());
   }
 
   /**

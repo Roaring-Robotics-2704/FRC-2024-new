@@ -5,9 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 
 public class DriveRobot extends Command {
@@ -16,7 +15,7 @@ public class DriveRobot extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.m_robotDrive);
   }
-XboxController m_driverController = RobotContainer.m_driverController;
+CommandXboxController m_driverController = RobotContainer.m_driverController1;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
