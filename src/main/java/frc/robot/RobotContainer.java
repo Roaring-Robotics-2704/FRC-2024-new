@@ -51,7 +51,9 @@ public class RobotContainer {
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final CMDDrive driveRobotCommand = new CMDDrive();
   public final static SUBArm armSubsystem = new SUBArm();
-  public static final CMDArm armCommand = new CMDArm(armSubsystem);
+  public static final CMDArmHigh armCommandHigh = new CMDArmHigh(armSubsystem);
+  public static final CMDArmLow armCommandLow = new CMDArmLow(armSubsystem);
+
 
 
 SendableChooser<String> PathPlannerautoChooser = new SendableChooser<String>();
@@ -157,6 +159,9 @@ for (int i = 0; i < listOfFiles.length; i++) {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+
+    
   }
 
   /**
