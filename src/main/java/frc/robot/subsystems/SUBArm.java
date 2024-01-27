@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -38,6 +39,14 @@ armMotor2.follow(armMotor1);
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.setDefaultNumber("armP", Constants.ArmConstants.kP);
+    SmartDashboard.setDefaultNumber("armI", Constants.ArmConstants.kI);
+    SmartDashboard.setDefaultNumber("armD", Constants.ArmConstants.kD);
+    pid.setP(SmartDashboard.getNumber("armP", 0));
+    pid.setI(SmartDashboard.getNumber("armI", 0));
+    pid.setD(SmartDashboard.getNumber("armD", 0));
+
+
     double motorPower = pid.calculate(encoder.getPosition(), setpoint);
     armMotor1.set(motorPower);
   }
