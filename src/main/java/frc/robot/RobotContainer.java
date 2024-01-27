@@ -19,8 +19,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.commands.CMDDrive;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SUBIntake;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
     public static final CMDDrive driveRobotCommand = new CMDDrive();
-
+    
   
     public static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
   
@@ -40,6 +42,8 @@ public class RobotContainer {
 
   // The driver's controller
   static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+
+    public final static SUBIntake kSUBIntake = new SUBIntake(ModuleConstants.kIntakeCanId);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -137,11 +137,14 @@ public final class Constants {
     public static final boolean kIntakeEncoderInverted = false;
     public static final IdleMode kIntakeControllerIdleMode = IdleMode.kBrake;
     public static final int kIntakeControllerCurrentLimit = 20;
+
+    public static final int kIntakeCanId = 5;
   }
 
   public static final class OIConstants {
     private OIConstants(){}
     public static final int kDriverControllerPort = 0;
+    public static final int kDriver2ControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
 
