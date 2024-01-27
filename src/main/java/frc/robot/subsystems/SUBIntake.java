@@ -1,20 +1,33 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ModuleConstants;
+
 public class SUBIntake extends SubsystemBase {
-    CANSparkMax intakeController;
+    private final CANSparkMax kIntakeController;
+    private final RelativeEncoder kIntakeEncoder;
+    
 
     public SUBIntake(int canId) {
-        intakeController = new CANSparkMax(canId, CANSparkLowLevel.MotorType.kBrushless);
-        intakeController.restoreFactoryDefaults();
+        kIntakeController = new CANSparkMax(canId, MotorType.kBrushless);
+        kIntakeController.restoreFactoryDefaults();
+        kIntakeEncoder = kIntakeController.getEncoder();
+        kIntakeEncoder.setInverted(ModuleConstants.kIntakeEncoderInverted);
+        kIntakeController.setIdleMode(ModuleConstants.kIntakeControllerIdleMode);
+        kIntakeController.setSmartCurrentLimit(ModuleConstants.kIntakeControllerCurrentLimit);
+        kIntakeController.burnFlash();
+
+        kIntakeEncoder.setPosition(0);
+
+    }
+
+    public void setIntakeController(double percent) {
+        kIntakeController.set(percent);
+        SmartDashboard.putNumber("intake power (%)", percent);
     }
 }

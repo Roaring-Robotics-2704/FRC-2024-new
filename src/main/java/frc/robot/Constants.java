@@ -133,6 +133,10 @@ public final class Constants {
     //setting the driving motor current limit will be an in-season project, for now 50A is an ok default
     public static final int kDrivingMotorCurrentLimit = 50; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    public static final boolean kIntakeEncoderInverted = false;
+    public static final IdleMode kIntakeControllerIdleMode = IdleMode.kBrake;
+    public static final int kIntakeControllerCurrentLimit = 20;
   }
 
   public static final class OIConstants {
