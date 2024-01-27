@@ -28,6 +28,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.io.File;
@@ -65,7 +66,7 @@ SendableChooser<String> PathPlannerautoChooser = new SendableChooser<String>();
     public static SendableChooser<Boolean> rateLimitChooser = new SendableChooser<Boolean>();
 
   // The driver's controller
-  static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -155,11 +156,13 @@ for (int i = 0; i < listOfFiles.length; i++) {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    m_driverController.x()
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-
+    
+    m_driverController.a().onTrue(armCommandLow);
+    m_driverController.b().onTrue(armCommandHigh);
 
     
   }
