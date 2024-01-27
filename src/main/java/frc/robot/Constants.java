@@ -133,6 +133,37 @@ public final class Constants {
     //setting the driving motor current limit will be an in-season project, for now 50A is an ok default
     public static final int kDrivingMotorCurrentLimit = 50; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+
+    public static final boolean kLeftHookEncoder = false;
+    public static final boolean kRightHookEncoder = false;
+
+    public static final double kLeftEncoderPositionFactor = (2 * Math.PI);
+    public static final double kRightEncoderPositionFactor = (2 * Math.PI);
+
+    public static final double kLeftEncoderPositionPIDMinInput = 0;
+    public static final double kLeftEncoderPositionPIDMaxInput = kLeftEncoderPositionFactor;
+    public static final double kRightEncoderPositionPIDMinInput = 0;
+    public static final double kRightEncoderPosiionPIDMaxInput = kRightEncoderPositionFactor;
+
+    public static final double kLeftEncoderP = 3.75;
+    public static final double kLeftEncoderI = 0;
+    public static final double kLeftEncoderD = 0;
+    public static final double kLeftEncoderFF = 0;
+    public static final double kLeftEncoderMinOutput = -1;
+    public static final double kLeftEncoderMaxOutput = 1;
+
+    public static final double kRightEncoderP = 3.75;
+    public static final double kRightEncoderI = 0;
+    public static final double kRightEncoderD = 0;
+    public static final double kRightEncoderFF = 0;
+    public static final double kRightEncoderMinOutput = -1;
+    public static final double kRightEncoderMaxOutput = 1;
+
+    public static final IdleMode kLeftEncoderIdleMode = IdleMode.kBrake;
+    public static final IdleMode kRightEncoderIdleMode = IdleMode.kBrake;
+
+    public static final int kLeftEncoderCurrentLimit = 50;
+    public static final int kRightEncoderCurrentLimit = 50;
   }
 
   public static final class OIConstants {
