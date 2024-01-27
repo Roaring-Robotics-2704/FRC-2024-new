@@ -5,10 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 
 public class SUBArm extends SubsystemBase {
   /** Creates a new SUBArm. */
-  public SUBArm() {}
+   CANSparkMax armMotor1 = new CANSparkMax(Constants.ArmConstants.kArmMotor1, MotorType.kBrushless);
+   CANSparkMax armMotor2 = new CANSparkMax(Constants.ArmConstants.kArmMotor2, MotorType.kBrushless);
+
+  public SUBArm(
+
+  ) {
+
+armMotor2.follow(armMotor1);
+
+  }
 
   @Override
   public void periodic() {

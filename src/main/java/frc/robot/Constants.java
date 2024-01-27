@@ -47,6 +47,7 @@ public final class Constants {
     public static final double kMagnitudeSlewRate = 1.5; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
+
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26);
     // Distance between centers of right and left wheels on robot
@@ -166,4 +167,13 @@ public final class Constants {
     private NeoMotorConstants(){}
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static class ArmConstants {
+    public static final int kArmMotor1 = 9;
+    public static final int kArmMotor2 = 10;
+    public static final double kRaisedPosition = 0;
+    public static final double kLowerPosition = 0;
+    
+  }
 }
+
