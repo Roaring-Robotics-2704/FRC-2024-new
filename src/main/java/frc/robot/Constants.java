@@ -173,7 +173,10 @@ public final class Constants {
     public static final int kArmMotor2 = 10;
     public static final double kRaisedPosition = 0;
     public static final double kLowerPosition = 0;
-    
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
   }
 }
 
