@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.CMDDrive;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -49,7 +49,10 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class RobotContainer {
   // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
-    public static final CMDDrive driveRobotCommand = new CMDDrive();
+  public static final CMDDrive driveRobotCommand = new CMDDrive();
+  public final static SUBArm armSubsystem = new SUBArm();
+  public static final CMDArm armCommand = new CMDArm(armSubsystem);
+
 
 SendableChooser<String> PathPlannerautoChooser = new SendableChooser<String>();
     SendableChooser<String> ChoreoautoChooser = new SendableChooser<String>();
