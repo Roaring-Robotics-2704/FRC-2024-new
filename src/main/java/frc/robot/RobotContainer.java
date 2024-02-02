@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -34,6 +35,7 @@ public class RobotContainer {
   // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
     public static final CMDDrive driveRobotCommand = new CMDDrive();
+    public static final SUBIntake m_subIntake = new SUBIntake(500);
     
   
     public static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
@@ -41,7 +43,9 @@ public class RobotContainer {
     public static SendableChooser<Boolean> rateLimitChooser = new SendableChooser<Boolean>();
 
   // The driver's controller
-  static XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+      CommandXboxController OIDriver2Controller = new CommandXboxController(OIConstants.kDriver2ControllerPort);
+
 
     public final static SUBIntake kSUBIntake = new SUBIntake(ModuleConstants.kIntakeCanId);
 
@@ -115,10 +119,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    m_driverController.x()
         .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
+            m_robotDrive::setX,
             m_robotDrive));
+      OIDriver2Controller.leftBumper().whileTrue(new RunCommand(()->m_subIntake.setIntakeController(-1), m_subIntake));
+      OIDriver2Controller.leftBumper().whileFalse(new RunCommand(()->m_subIntake.setIntakeController(0), m_subIntake));
+
   }
 
   /**

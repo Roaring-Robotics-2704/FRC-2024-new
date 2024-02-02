@@ -15,7 +15,6 @@ public class CMDIntake {
     
     double angle = 0;
 
-    CommandXboxController OIDriver2Controller = new CommandXboxController(OIConstants.kDriver2ControllerPort);
     
 
 

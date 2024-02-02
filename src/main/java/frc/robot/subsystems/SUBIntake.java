@@ -10,19 +10,15 @@ import frc.robot.Constants.ModuleConstants;
 
 public class SUBIntake extends SubsystemBase {
     private final CANSparkMax kIntakeController;
-    private final RelativeEncoder kIntakeEncoder;
     
 
     public SUBIntake(int canId) {
         kIntakeController = new CANSparkMax(canId, MotorType.kBrushless);
         kIntakeController.restoreFactoryDefaults();
-        kIntakeEncoder = kIntakeController.getEncoder();
-        kIntakeEncoder.setInverted(ModuleConstants.kIntakeEncoderInverted);
         kIntakeController.setIdleMode(ModuleConstants.kIntakeControllerIdleMode);
         kIntakeController.setSmartCurrentLimit(ModuleConstants.kIntakeControllerCurrentLimit);
         kIntakeController.burnFlash();
 
-        kIntakeEncoder.setPosition(0);
 
     }
 
