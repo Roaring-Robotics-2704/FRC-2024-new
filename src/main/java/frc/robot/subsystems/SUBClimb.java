@@ -4,20 +4,28 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.RelativeEncoder;
 
 public class SUBClimb extends SubsystemBase {
     private final CANSparkMax kLeftHook;
     private final CANSparkMax kRightHook;
     
-    private final AbsoluteEncoder kLeftEncoder;
-    private final AbsoluteEncoder kRightEncoder;
+    private final AbsoluteEncoder kLeftHookEncoder;
+    private final AbsoluteEncoder kRightHookEncoder;
 
-    private final SparkPIDController kLeftPIDController;
-    private final SparkPIDController kRightPIDController;
+    private final SparkPIDController kLeftHookPIDController;
+    private final SparkPIDController kRightHookPIDController;
+
+    double leftHookSetPoint = 0;
+    double rightHookSetPoint = 0;
+   
+   PIDController pid = new PIDController(Constants.HookConstants.kP, Constants.HookConstants.kI, Constants.HookConstants.kD);
 
     public SUBClimb(int LeftHookCANId, int RightHookCANId){
         kLeftHook = new CANSparkMax(LeftHookCANId, MotorType.kBrushless);
@@ -26,43 +34,59 @@ public class SUBClimb extends SubsystemBase {
         kLeftHook.restoreFactoryDefaults();
         kRightHook.restoreFactoryDefaults();
 
-        kLeftEncoder = kLeftHook.getAbsoluteEncoder(Type.kDutyCycle);
-        kRightEncoder= kRightHook.getAbsoluteEncoder(Type.kDutyCycle);
-        kLeftPIDController = kLeftHook.getPIDController();
-        kRightPIDController = kRightHook.getPIDController();
-        kLeftPIDController.setFeedbackDevice(kLeftEncoder);
-        kRightPIDController.setFeedbackDevice(kRightEncoder);
+        kLeftHookEncoder = kLeftHook.getAbsoluteEncoder(Type.kDutyCycle);
+        kRightHookEncoder = kRightHook.getAbsoluteEncoder(Type.kDutyCycle);
+        kLeftHookPIDController = kLeftHook.getPIDController();
+        kRightHookPIDController = kRightHook.getPIDController();
+        kLeftHookPIDController.setFeedbackDevice(kLeftHookEncoder);
+        kRightHookPIDController.setFeedbackDevice(kRightHookEncoder);
 
-        kLeftEncoder.setInverted(ModuleConstants.kLeftHookEncoder);
-        kRightEncoder.setInverted(ModuleConstants.kRightHookEncoder);
+        kLeftHookEncoder.setInverted(ModuleConstants.kLeftHookEncoder);
+        kRightHookEncoder.setInverted(ModuleConstants.kRightHookEncoder);
 
-        kLeftPIDController.setPositionPIDWrappingEnabled(true);
-        kLeftPIDController.setPositionPIDWrappingMinInput(ModuleConstants.kLeftEncoderPositionPIDMinInput);
-        kLeftPIDController.setPositionPIDWrappingMaxInput(ModuleConstants.kLeftEncoderPositionPIDMaxInput);
-        kRightPIDController.setPositionPIDWrappingEnabled(true);
-        kRightPIDController.setPositionPIDWrappingMinInput(ModuleConstants.kRightEncoderPositionPIDMinInput);
-        kRightPIDController.setPositionPIDWrappingMaxInput(ModuleConstants.kRightEncoderPosiionPIDMaxInput);
+        kLeftHookPIDController.setPositionPIDWrappingEnabled(true);
+        kLeftHookPIDController.setPositionPIDWrappingMinInput(ModuleConstants.kLeftHookEncoderPositionPIDMinInput);
+        kLeftHookPIDController.setPositionPIDWrappingMaxInput(ModuleConstants.kLeftHookEncoderPositionPIDMaxInput);
+        kRightHookPIDController.setPositionPIDWrappingEnabled(true);
+        kRightHookPIDController.setPositionPIDWrappingMinInput(ModuleConstants.kRightHookEncoderPositionPIDMinInput);
+        kRightHookPIDController.setPositionPIDWrappingMaxInput(ModuleConstants.kRightHookEncoderPosiionPIDMaxInput);
 
-        kLeftPIDController.setP(ModuleConstants.kLeftEncoderP);
-        kLeftPIDController.setI(ModuleConstants.kLeftEncoderI);
-        kLeftPIDController.setD(ModuleConstants.kLeftEncoderD);
-        kLeftPIDController.setFF(ModuleConstants.kLeftEncoderFF);
-        kLeftPIDController.setOutputRange(ModuleConstants.kLeftEncoderMinOutput, ModuleConstants.kLeftEncoderMaxOutput);
+        kLeftHookPIDController.setP(ModuleConstants.kLeftHookEncoderP);
+        kLeftHookPIDController.setI(ModuleConstants.kLeftHookEncoderI);
+        kLeftHookPIDController.setD(ModuleConstants.kLeftHookEncoderD);
+        kLeftHookPIDController.setFF(ModuleConstants.kLeftHookEncoderFF);
+        kLeftHookPIDController.setOutputRange(ModuleConstants.kLeftHookEncoderMinOutput, ModuleConstants.kLeftHookEncoderMaxOutput);
 
-        kRightPIDController.setP(ModuleConstants.kRightEncoderP);
-        kRightPIDController.setI(ModuleConstants.kRightEncoderI);
-        kRightPIDController.setD(ModuleConstants.kRightEncoderD);
-        kRightPIDController.setFF(ModuleConstants.kRightEncoderFF);
-        kRightPIDController.setOutputRange(ModuleConstants.kRightEncoderMinOutput, ModuleConstants.kRightEncoderMaxOutput);
+        kRightHookPIDController.setP(ModuleConstants.kRightHookEncoderP);
+        kRightHookPIDController.setI(ModuleConstants.kRightHookEncoderI);
+        kRightHookPIDController.setD(ModuleConstants.kRightHookEncoderD);
+        kRightHookPIDController.setFF(ModuleConstants.kRightHookEncoderFF);
+        kRightHookPIDController.setOutputRange(ModuleConstants.kRightHookEncoderMinOutput, ModuleConstants.kRightHookEncoderMaxOutput);
 
-        kLeftHook.setIdleMode(ModuleConstants.kLeftEncoderIdleMode);
-        kRightHook.setIdleMode(ModuleConstants.kRightEncoderIdleMode);
-        kLeftHook.setSmartCurrentLimit(ModuleConstants.kLeftEncoderCurrentLimit);
-        kRightHook.setSmartCurrentLimit(ModuleConstants.kRightEncoderCurrentLimit);
+        kLeftHook.setIdleMode(ModuleConstants.kLeftHookEncoderIdleMode);
+        kRightHook.setIdleMode(ModuleConstants.kRightHookEncoderIdleMode);
+        kLeftHook.setSmartCurrentLimit(ModuleConstants.kLeftHookEncoderCurrentLimit);
+        kRightHook.setSmartCurrentLimit(ModuleConstants.kRightHookEncoderCurrentLimit);
 
         kLeftHook.burnFlash();
         kRightHook.burnFlash();
 
-        
+    }
+
+    public void setLeftHookPosition(double leftHookPosition) {
+        leftHookSetPoint = leftHookPosition;
+    }
+    public void setRightHookPosition(double rightHookPosition) {
+        rightHookSetPoint = rightHookPosition;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.setDefaultNumber("hookP", Constants.HookConstants.kP);
+        SmartDashboard.setDefaultNumber("hookI", Constants.HookConstants.kI);
+        SmartDashboard.setDefaultNumber("hookD", Constants.HookConstants.kD);
+        pid.setP(SmartDashboard.getNumber("hookP", 0));
+        pid.setI(SmartDashboard.getNumber("hookI", 0));
+        pid.setD(SmartDashboard.getNumber("hookD", 0));
     }
 }

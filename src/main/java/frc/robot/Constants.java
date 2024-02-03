@@ -137,33 +137,41 @@ public final class Constants {
     public static final boolean kLeftHookEncoder = false;
     public static final boolean kRightHookEncoder = false;
 
-    public static final double kLeftEncoderPositionFactor = (2 * Math.PI);
-    public static final double kRightEncoderPositionFactor = (2 * Math.PI);
+    public static final double kLeftHookEncoderPositionFactor = (2 * Math.PI);
+    public static final double kRightHookEncoderPositionFactor = (2 * Math.PI);
 
-    public static final double kLeftEncoderPositionPIDMinInput = 0;
-    public static final double kLeftEncoderPositionPIDMaxInput = kLeftEncoderPositionFactor;
-    public static final double kRightEncoderPositionPIDMinInput = 0;
-    public static final double kRightEncoderPosiionPIDMaxInput = kRightEncoderPositionFactor;
+    public static final double kLeftHookEncoderPositionPIDMinInput = 0;
+    public static final double kLeftHookEncoderPositionPIDMaxInput = kLeftHookEncoderPositionFactor;
+    public static final double kRightHookEncoderPositionPIDMinInput = 0;
+    public static final double kRightHookEncoderPosiionPIDMaxInput = kRightHookEncoderPositionFactor;
 
-    public static final double kLeftEncoderP = 3.75;
-    public static final double kLeftEncoderI = 0;
-    public static final double kLeftEncoderD = 0;
-    public static final double kLeftEncoderFF = 0;
-    public static final double kLeftEncoderMinOutput = -1;
-    public static final double kLeftEncoderMaxOutput = 1;
+    public static final double kLeftHookEncoderP = 3.75;
+    public static final double kLeftHookEncoderI = 0;
+    public static final double kLeftHookEncoderD = 0;
+    public static final double kLeftHookEncoderFF = 0;
+    public static final double kLeftHookEncoderMinOutput = -1;
+    public static final double kLeftHookEncoderMaxOutput = 1;
 
-    public static final double kRightEncoderP = 3.75;
-    public static final double kRightEncoderI = 0;
-    public static final double kRightEncoderD = 0;
-    public static final double kRightEncoderFF = 0;
-    public static final double kRightEncoderMinOutput = -1;
-    public static final double kRightEncoderMaxOutput = 1;
+    public static final double kRightHookEncoderP = 3.75;
+    public static final double kRightHookEncoderI = 0;
+    public static final double kRightHookEncoderD = 0;
+    public static final double kRightHookEncoderFF = 0;
+    public static final double kRightHookEncoderMinOutput = -1;
+    public static final double kRightHookEncoderMaxOutput = 1;
 
-    public static final IdleMode kLeftEncoderIdleMode = IdleMode.kBrake;
-    public static final IdleMode kRightEncoderIdleMode = IdleMode.kBrake;
+    public static final IdleMode kLeftHookEncoderIdleMode = IdleMode.kBrake;
+    public static final IdleMode kRightHookEncoderIdleMode = IdleMode.kBrake;
 
-    public static final int kLeftEncoderCurrentLimit = 50;
-    public static final int kRightEncoderCurrentLimit = 50;
+    public static final int kLeftHookEncoderCurrentLimit = 50;
+    public static final int kRightHookEncoderCurrentLimit = 50;
+  }
+
+  public static final class HookConstants {
+    public static final double kRaisedHookPosition = 0;
+    public static final double kLowerHookPosition = 0;
+    public static final double kP = 0.1;
+    public static final double kI = 0;
+    public static final double kD = 0;
   }
 
   public static final class OIConstants {
