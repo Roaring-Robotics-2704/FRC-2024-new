@@ -165,8 +165,20 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(m_SUBShooter.getIntakeCommand());
 
  m_driverController.rightStick().whileTrue(m_CMDAlign);
-//m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
-//m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
+m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
+m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
+
+if (m_driverController2.getLeftY() > 0.1){
+    new RunCommand(()-> m_SUBArm.setPosition(Math.PI/2), m_SUBArm);
+}
+else new RunCommand(()-> m_SUBArm.setPosition(), m_SUBArm);
+
+
+
+if (m_driverController2.getLeftY() > -0.1){
+    new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm);
+    
+}
 
   }
 
