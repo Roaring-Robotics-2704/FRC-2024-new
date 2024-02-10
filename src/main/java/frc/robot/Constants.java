@@ -138,7 +138,7 @@ public final class Constants {
     public static final IdleMode kIntakeControllerIdleMode = IdleMode.kBrake;
     public static final int kIntakeControllerCurrentLimit = 20;
 
-    public static final int kIntakeCanId = 5;
+    public static final int kIntakeCanId = 11;
   }
 
   public static final class OIConstants {
