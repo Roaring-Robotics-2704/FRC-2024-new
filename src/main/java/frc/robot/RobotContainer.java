@@ -123,8 +123,8 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             m_robotDrive::setX,
             m_robotDrive));
-      OIDriver2Controller.leftBumper().whileTrue(new RunCommand(()->m_subIntake.setIntakeController(-1), m_subIntake));
-      OIDriver2Controller.leftBumper().whileFalse(new RunCommand(()->m_subIntake.setIntakeController(0), m_subIntake));
+      m_driverController.leftBumper().whileTrue(new RunCommand(()->m_subIntake.setIntakeController(-1), m_subIntake));
+      m_driverController.leftBumper().whileFalse(new RunCommand(()->m_subIntake.setIntakeController(0), m_subIntake));
 
   }
 
