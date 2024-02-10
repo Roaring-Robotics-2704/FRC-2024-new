@@ -123,6 +123,7 @@ public class RobotContainer {
     // Configure default commands
     m_SUBShooter.setDefaultCommand(m_CMDShooter);
      m_robotDrive.setDefaultCommand(
+      
        //   The left stick controls translation of the robot.
        //   Turning is controlled by the X axis of the right stick.
          /* 
@@ -134,7 +135,16 @@ public class RobotContainer {
                  true, true),
              m_robotDrive));*/
              driveRobotCommand);
-            
+    m_SUBArm.setDefaultCommand(new RunCommand(()-> {
+      if (m_driverController2.getLeftY() > 0.1){
+        m_SUBArm.changePosition(Math.PI/180);
+      }
+      
+      if (m_driverController2.getLeftY() < -0.1){
+        m_SUBArm.changePosition(-1 * Math.PI/180);
+      }
+
+    }));
   }
 
   /**
@@ -168,20 +178,22 @@ public class RobotContainer {
 m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
 m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
 
-if (m_driverController2.getLeftY() > 0.1){
-    new RunCommand(()-> m_SUBArm.setPosition(Math.PI/2), m_SUBArm);
+
+   
+
+//else new RunCommand(()-> m_SUBArm.setPosition(), m_SUBArm);
+if (m_driverController2.getLeftY() < 0.1){
+    new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm);
 }
-else new RunCommand(()-> m_SUBArm.setPosition(), m_SUBArm);
 
 
 
 if (m_driverController2.getLeftY() > -0.1){
-    new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm);
-    
+    new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm); 
 }
 
-  }
 
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

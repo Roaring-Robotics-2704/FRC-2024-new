@@ -20,9 +20,9 @@ import com.revrobotics.RelativeEncoder;
 
 public class SUBArm extends SubsystemBase {
   /** Creates a new SUBArm. */
-   //CANSparkMax armMotor1 = new CANSparkMax(Constants.ArmConstants.kArmMotor1, MotorType.kBrushless);
-   //CANSparkMax armMotor2 = new CANSparkMax(Constants.ArmConstants.kArmMotor2, MotorType.kBrushless);
-   //AbsoluteEncoder encoder = armMotor1.getAbsoluteEncoder(Type.kDutyCycle);
+   CANSparkMax armMotor1 = new CANSparkMax(Constants.ArmConstants.kArmMotor1, MotorType.kBrushless);
+   CANSparkMax armMotor2 = new CANSparkMax(Constants.ArmConstants.kArmMotor2, MotorType.kBrushless);
+   AbsoluteEncoder encoder = armMotor1.getAbsoluteEncoder(Type.kDutyCycle);
    double setpoint = 0;
    
 
@@ -32,7 +32,7 @@ public class SUBArm extends SubsystemBase {
 
   ) {
 
-//armMotor2.follow(armMotor1);
+armMotor2.follow(armMotor1);
 pid.setTolerance(1);
 
 
@@ -40,12 +40,15 @@ pid.setTolerance(1);
 
   public void setPosition(double position){
     setpoint = position; 
-    //double motorPower = pid.calculate(encoder.getPosition(), setpoint);
-    //armMotor1.set(motorPower);
   }
 
+  public void changePosition(double positionChange){
+    setpoint += positionChange;
+  }
+
+
    public double getPosition(){
-  
+      return encoder.getPosition();
     }
 
   @Override
@@ -58,8 +61,16 @@ pid.setTolerance(1);
     pid.setI(SmartDashboard.getNumber("armI", 0));
     pid.setD(SmartDashboard.getNumber("armD", 0));
 
+    if (setpoint > Math.PI/2){
+      setpoint = Math.PI/2;
+    }
 
-    //double motorPower = pid.calculate(encoder.getPosition(), setpoint);
-    //armMotor1.set(motorPower);
+    if (setpoint < 0){
+      setpoint = 0;
+    }
+
+
+    double motorPower = pid.calculate(encoder.getPosition(), setpoint);
+    armMotor1.set(motorPower);
   }
 }
