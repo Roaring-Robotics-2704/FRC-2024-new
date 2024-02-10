@@ -35,7 +35,6 @@ public class RobotContainer {
   // The robot's subsystems
   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
     public static final CMDDrive driveRobotCommand = new CMDDrive();
-    public static final SUBIntake m_subIntake = new SUBIntake(500);
     
   
     public static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
@@ -123,8 +122,10 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             m_robotDrive::setX,
             m_robotDrive));
-      m_driverController.leftBumper().whileTrue(new RunCommand(()->m_subIntake.setIntakeController(-0.1), m_subIntake));
-      m_driverController.leftBumper().whileFalse(new RunCommand(()->m_subIntake.setIntakeController(0), m_subIntake));
+      m_driverController.leftBumper().whileTrue(new RunCommand(()->kSUBIntake.setIntakeController(ModuleConstants.kIntakeMotorSpeed), kSUBIntake));
+      //m_driverController.rightBumper().whileTrue(new RunCommand(()->kSUBIntake.setIntakeController(-ModuleConstants.kIntakeMotorSpeed), kSUBIntake));
+
+      m_driverController.leftBumper().whileFalse(new RunCommand(()->kSUBIntake.setIntakeController(0), kSUBIntake));
 
   }
 

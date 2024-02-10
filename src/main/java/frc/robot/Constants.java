@@ -137,6 +137,7 @@ public final class Constants {
     public static final boolean kIntakeEncoderInverted = false;
     public static final IdleMode kIntakeControllerIdleMode = IdleMode.kBrake;
     public static final int kIntakeControllerCurrentLimit = 20;
+    public static final double kIntakeMotorSpeed = 0.5;
 
     public static final int kIntakeCanId = 11;
   }
