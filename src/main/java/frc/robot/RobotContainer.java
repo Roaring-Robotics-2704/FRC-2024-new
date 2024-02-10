@@ -137,11 +137,11 @@ public class RobotContainer {
              driveRobotCommand);
     m_SUBArm.setDefaultCommand(new RunCommand(()-> {
       if (m_driverController2.getLeftY() > 0.1){
-        m_SUBArm.changePosition(Math.PI/180);
+        m_SUBArm.changePosition(Math.PI/900);
       }
       
       if (m_driverController2.getLeftY() < -0.1){
-        m_SUBArm.changePosition(-1 * Math.PI/180);
+        m_SUBArm.changePosition(-1 * Math.PI/900);
       }
 
     }));
