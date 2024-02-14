@@ -40,6 +40,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.SUBArm;
 import frc.robot.subsystems.SUBShooter;
 import frc.robot.subsystems.SUBVision;
+import frc.robot.subsystems.SUBAmpShooter;
 import frc.robot.subsystems.SUBShooter.*;
 import frc.utils.RoaringUtils;
 import frc.utils.RoaringUtils.DeadzoneUtils;
@@ -59,6 +60,7 @@ public class RobotContainer {
     public static final SUBVision m_SUBVision = new SUBVision();
      public static final CMDAlign m_CMDAlign = new CMDAlign();
     public static final SUBArm m_SUBArm = new SUBArm();
+    public static final SUBAmpShooter kSUBAmpShooter = new SUBAmpShooter();
 
   private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(new PhotonCamera("PiCam"), m_robotDrive);
 
@@ -182,6 +184,10 @@ public class RobotContainer {
 m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
 m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
 //m_driverController2.x().whileFalse(AutoBuilder.pathfindToPose(new Pose2d))
+
+m_driverController.rightBumper().whileTrue(new RunCommand(()-> 
+  kSUBAmpShooter.setAmpShooterMotor(Constants.AmpShooterConstants.kAmpShooterMotorSpeed), 
+  kSUBAmpShooter));
 
   }
 

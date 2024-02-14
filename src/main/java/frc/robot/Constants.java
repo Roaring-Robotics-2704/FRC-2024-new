@@ -164,20 +164,22 @@ public final class Constants {
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+      new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared
+      );
   }
 
   public static final class NeoMotorConstants {
     private NeoMotorConstants(){}
     public static final double kFreeSpeedRpm = 5676;
   }
-<<<<<<< HEAD
 
   public static final class AmpShooterConstants {
     public static final int kAmpShooterCanId1 = 12;
     public static final int kAmpShooterCanId2 = 13;
-=======
+    public static final double kAmpShooterMotorSpeed = -1;
+  }
+
   public static class LauncherConstants {
     // PWM ports/CAN IDs for motor controllers
     public static final int kFeederID = 9;
@@ -193,9 +195,9 @@ public final class Constants {
     public static final double kLaunchFeederSpeed = 1;
     public static final double kIntakeLauncherSpeed = -1;
     public static final double kIntakeFeederSpeed = -.2;
-
     public static final double kLauncherDelay = 1.5;
   }
+
   public static class ArmConstants {
     public static final int kArmMotor1 = 6;
     public static final int kArmMotor2 = 5;
@@ -204,25 +206,23 @@ public final class Constants {
     public static final double kP = 0.1;
     public static final double kI = 0;
     public static final double kD = 0;
-
-
   }
-    public static class VisionConstants {
+
+  public static class VisionConstants {
 
     public static final String APRILTAG_CAMERA_NAME = "PiCam";
 
     /** Physical location of the apriltag camera on the robot, relative to the center of the robot. */
     public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = new Transform3d(
-        new Translation3d(0,0,0),//Units.inchesToMeters(17.5)),
-        new Rotation3d(0.0, 0, 0));
+      new Translation3d(0,0,0),//Units.inchesToMeters(17.5)),
+      new Rotation3d(0.0, 0, 0)
+    );
     
     public static final double FIELD_LENGTH_METERS = 16.54175;
     public static final double FIELD_WIDTH_METERS = 8.0137;
-public static final Transform3d ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
+    public static final Transform3d ROBOT_TO_CAMERA = APRILTAG_CAMERA_TO_ROBOT.inverse();
 
     /** Minimum target ambiguity. Targets with higher ambiguity will be discarded */
     public static final double APRILTAG_AMBIGUITY_THRESHOLD = 0.2;
->>>>>>> DRIVETRAINMR
-
   }
 }
