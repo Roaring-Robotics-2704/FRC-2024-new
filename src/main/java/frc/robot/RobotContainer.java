@@ -4,26 +4,45 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import java.util.List;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.LauncherConstants;
+import frc.robot.Constants.OIConstants;
+ import frc.robot.commands.CMDAlign;
+ import frc.robot.commands.CMDDrive;
+//import frc.robot.commands.CMDShooter;
+import frc.robot.commands.LaunchNote;
+import frc.robot.commands.PrepareLaunch;
+ import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
+import frc.robot.subsystems.SUBArm;
+import frc.robot.subsystems.SUBShooter;
+import frc.robot.subsystems.SUBVision;
+import frc.robot.subsystems.SUBShooter.*;
+import frc.utils.RoaringUtils;
+import frc.utils.RoaringUtils.DeadzoneUtils;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,31 +51,104 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+   //The robot's subsystems
+   public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
+     public static final CMDDrive driveRobotCommand = new CMDDrive();
+    public static final SUBShooter m_SUBShooter = new SUBShooter();
+   // public static final CMDShooter m_CMDShooter = new CMDShooter();
+    public static final SUBVision m_SUBVision = new SUBVision();
+     public static final CMDAlign m_CMDAlign = new CMDAlign();
+    public static final SUBArm m_SUBArm = new SUBArm();
 
-  // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(new PhotonCamera("PiCam"), m_robotDrive);
+
+
+
+
   
+    public static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
+    public static SendableChooser<String> controlChooser = new SendableChooser<String>();
+
+  
+    public static SendableChooser<Boolean> rateLimitChooser = new SendableChooser<Boolean>();
+
+   //The driver's controller
+  public static CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  public static CommandXboxController m_driverController2 = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
 
+    m_robotDrive.resetOdometry(new Pose2d(8.25,4.1, Rotation2d.fromDegrees(0)));
+    //m_robotDrive.resetOdometry(PathPlannerPath.fromPathFile("2 note auto").getPreviewStartingHolonomicPose());
+    
+
+    AutoBuilder.configureHolonomic(
+            m_robotDrive::getPose,  //Robot pose supplier
+                 m_robotDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                 m_robotDrive::getspeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                 m_robotDrive::driveRobotRelative,//  Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(1.5, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(12, 0.0, 0.0),//  Rotation PID constants
+                   3,//  Max module speed, in m/s
+                         Units.inchesToMeters(18.2), // Drive base radius in meters. Distance from robot center to furthest module.
+                         new ReplanningConfig() // Default path replanning config. See the API for the options here
+                 ),
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            m_robotDrive // Reference to this subsystem to set requirements
+    );
+
+
+     // Configure the button bindings
+
+            NamedCommands.registerCommand("Intake", m_SUBShooter.getIntakeCommand().withTimeout(1));
+            NamedCommands.registerCommand("Shoot", new PrepareLaunch(m_SUBShooter)
+            .withTimeout(LauncherConstants.kLauncherDelay)
+            .andThen(new LaunchNote(m_SUBShooter).withTimeout(LauncherConstants.kLauncherDelay)));
+
+    fieldOrientedChooser.setDefaultOption("Field Oriented", true);
+    fieldOrientedChooser.addOption("Robot Oriented", false);
+
+    rateLimitChooser.setDefaultOption("False", false);
+    rateLimitChooser.addOption("True", true);
+    controlChooser.setDefaultOption("Drone", "drone");
+    controlChooser.addOption("Game", "game");
+
+    SmartDashboard.putData("Rate limit",rateLimitChooser);
+    SmartDashboard.putData("Field oriented",fieldOrientedChooser);
+    SmartDashboard.putData("Controls", controlChooser);
+
+    configureButtonBindings();
+   //SendableChooser<Command> autoPathChooser = AutoBuilder.buildAutoChooser();
+    //SmartDashboard.putData("Path follower", autoPathChooser);
     // Configure default commands
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
-            m_robotDrive));
+    //m_SUBShooter.setDefaultCommand(m_CMDShooter);
+     m_robotDrive.setDefaultCommand(
+       //   The left stick controls translation of the robot.
+       //   Turning is controlled by the X axis of the right stick.
+         /* 
+         new RunCommand(
+             () -> m_robotDrive.drive(
+                 -DeadzoneUtils.LinearDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                 -DeadzoneUtils.LinearDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                 -DeadzoneUtils.LinearDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                 true, true),
+             m_robotDrive));*/
+             driveRobotCommand);
+            
   }
 
   /**
@@ -69,14 +161,28 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-    
-    m_driverController
+         m_driverController.x()
+         .whileTrue(new RunCommand(
+             () -> m_robotDrive.setX(),
+             m_robotDrive));
 
-    
+
+
+           m_driverController2
+        .rightBumper()
+        .whileTrue(
+            new PrepareLaunch(m_SUBShooter)
+                .withTimeout(LauncherConstants.kLauncherDelay)
+                .andThen(new LaunchNote(m_SUBShooter))
+                .handleInterrupt(() -> m_SUBShooter.stop()));
+
+    m_driverController2.leftBumper().whileTrue(m_SUBShooter.getIntakeCommand());
+
+ m_driverController.rightTrigger().whileTrue(m_CMDAlign);
+m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
+m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
+//m_driverController2.x().whileFalse(AutoBuilder.pathfindToPose(new Pose2d))
+
   }
 
   /**
@@ -85,43 +191,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
-  }
+        m_robotDrive.resetOdometry(PathPlannerPath.fromPathFile("box").getPreviewStartingHolonomicPose());
+      return AutoBuilder.buildAuto("box");
+    }
 }
