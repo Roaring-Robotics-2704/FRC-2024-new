@@ -180,18 +180,17 @@ m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConst
 
 
    
-
-//else new RunCommand(()-> m_SUBArm.setPosition(), m_SUBArm);
+/*
 if (m_driverController2.getLeftY() < 0.1){
     new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm);
 }
+*/
 
-
-
+/*
 if (m_driverController2.getLeftY() > -0.1){
     new RunCommand(()-> m_SUBArm.setPosition(0), m_SUBArm); 
 }
-
+*/
 
   }
   /**
