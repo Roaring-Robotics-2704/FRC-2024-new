@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OIConstants;
- import frc.robot.commands.CMDAlign;
  import frc.robot.commands.CMDDrive;
 import frc.robot.commands.CMDShooter;
 import frc.robot.commands.LaunchNote;
@@ -33,7 +32,6 @@ import frc.robot.commands.PrepareLaunch;
  import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SUBArm;
 import frc.robot.subsystems.SUBShooter;
-import frc.robot.subsystems.SUBVision;
 import frc.robot.subsystems.SUBShooter.*;
 import frc.utils.RoaringUtils;
 import frc.utils.RoaringUtils.DeadzoneUtils;
@@ -50,8 +48,6 @@ public class RobotContainer {
      public static final CMDDrive driveRobotCommand = new CMDDrive();
     public static final SUBShooter m_SUBShooter = new SUBShooter();
     public static final CMDShooter m_CMDShooter = new CMDShooter();
-    public static final SUBVision m_SUBVision = new SUBVision();
-     public static final CMDAlign m_CMDAlign = new CMDAlign();
     public static final SUBArm m_SUBArm = new SUBArm();
 
 
@@ -121,8 +117,8 @@ public class RobotContainer {
    //SendableChooser<Command> autoPathChooser = AutoBuilder.buildAutoChooser();
     //SmartDashboard.putData("Path follower", autoPathChooser);
     // Configure default commands
-    m_SUBShooter.setDefaultCommand(m_CMDShooter);
-     m_robotDrive.setDefaultCommand(
+    //m_SUBShooter.setDefaultCommand(m_CMDShooter);
+     //m_robotDrive.setDefaultCommand(
       
        //   The left stick controls translation of the robot.
        //   Turning is controlled by the X axis of the right stick.
@@ -134,17 +130,17 @@ public class RobotContainer {
                  -DeadzoneUtils.LinearDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                  true, true),
              m_robotDrive));*/
-             driveRobotCommand);
+             //driveRobotCommand);
     m_SUBArm.setDefaultCommand(new RunCommand(()-> {
-      if (m_driverController2.getLeftY() > 0.1){
+      if (m_driverController.getLeftY() > 0.1){
         m_SUBArm.changePosition(Math.PI/900);
       }
       
-      if (m_driverController2.getLeftY() < -0.1){
+      if (m_driverController.getLeftY() < -0.1){
         m_SUBArm.changePosition(-1 * Math.PI/900);
       }
 
-    }));
+    },m_SUBArm));
   }
 
   /**
@@ -174,9 +170,8 @@ public class RobotContainer {
 
     m_driverController.leftBumper().whileTrue(m_SUBShooter.getIntakeCommand());
 
- m_driverController.rightStick().whileTrue(m_CMDAlign);
-m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
-m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
+m_driverController.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
+m_driverController.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
 
 
    

@@ -40,6 +40,7 @@ pid.setTolerance(1);
 
   public void setPosition(double position){
     setpoint = position; 
+    armMotor1.set(position);
   }
 
   public void changePosition(double positionChange){
@@ -54,13 +55,14 @@ pid.setTolerance(1);
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.setDefaultNumber("armP", Constants.ArmConstants.kP);
-    SmartDashboard.setDefaultNumber("armI", Constants.ArmConstants.kI);
-    SmartDashboard.setDefaultNumber("armD", Constants.ArmConstants.kD);
+    SmartDashboard.putNumber("armP", Constants.ArmConstants.kP);
+    SmartDashboard.putNumber("armI", Constants.ArmConstants.kI);
+    SmartDashboard.putNumber("armD", Constants.ArmConstants.kD);
     pid.setP(SmartDashboard.getNumber("armP", 0));
     pid.setI(SmartDashboard.getNumber("armI", 0));
     pid.setD(SmartDashboard.getNumber("armD", 0));
-
+  
+/*fgkfykj
     if (setpoint > Math.PI/2){
       setpoint = Math.PI/2;
     }
@@ -68,7 +70,7 @@ pid.setTolerance(1);
     if (setpoint < 0){
       setpoint = 0;
     }
-
+*/
 
     double motorPower = pid.calculate(encoder.getPosition(), setpoint);
     armMotor1.set(motorPower);
