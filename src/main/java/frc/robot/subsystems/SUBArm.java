@@ -23,24 +23,25 @@ public class SUBArm extends SubsystemBase {
    CANSparkMax armMotor1 = new CANSparkMax(Constants.ArmConstants.kArmMotor1, MotorType.kBrushless);
    CANSparkMax armMotor2 = new CANSparkMax(Constants.ArmConstants.kArmMotor2, MotorType.kBrushless);
    AbsoluteEncoder encoder = armMotor1.getAbsoluteEncoder(Type.kDutyCycle);
-   double setpoint = 0;
+   double setpoint = 0.8;
    
 
    PIDController pid = new PIDController(Constants.ArmConstants.kP, Constants.ArmConstants.kI, Constants.ArmConstants.kD);
 
-  public SUBArm(
-
-  ) {
+  public SUBArm()
+   {
 
 armMotor2.follow(armMotor1);
-pid.setTolerance(1);
+pid.setTolerance(Units.degreesToRadians(setpoint));
 
-
+    SmartDashboard.putNumber("armP", Constants.ArmConstants.kP);
+    SmartDashboard.putNumber("armI", Constants.ArmConstants.kI);
+    SmartDashboard.putNumber("armD", Constants.ArmConstants.kD);
   }
 
   public void setPosition(double position){
     setpoint = position; 
-    armMotor1.set(position);
+    //armMotor1.set(position);
   }
 
   public void changePosition(double positionChange){
@@ -52,17 +53,17 @@ pid.setTolerance(1);
       return encoder.getPosition();
     }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("armP", Constants.ArmConstants.kP);
-    SmartDashboard.putNumber("armI", Constants.ArmConstants.kI);
-    SmartDashboard.putNumber("armD", Constants.ArmConstants.kD);
     pid.setP(SmartDashboard.getNumber("armP", 0));
     pid.setI(SmartDashboard.getNumber("armI", 0));
     pid.setD(SmartDashboard.getNumber("armD", 0));
+    SmartDashboard.putNumber("Encoder Value", encoder.getPosition());
+    SmartDashboard.putNumber("Setpoint", setpoint);
   
-/*fgkfykj
+/*
     if (setpoint > Math.PI/2){
       setpoint = Math.PI/2;
     }
@@ -73,6 +74,7 @@ pid.setTolerance(1);
 */
 
     double motorPower = pid.calculate(encoder.getPosition(), setpoint);
+    SmartDashboard.putNumber("motor power", motorPower);
     armMotor1.set(motorPower);
   }
 }
