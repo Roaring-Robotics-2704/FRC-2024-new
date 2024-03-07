@@ -33,13 +33,14 @@ public class LaunchNote extends Command {
   @Override
   public void initialize() {
     // Set the wheels to launching speed
-    m_launcher.setLaunchWheel(kLauncherSpeed);
-    m_launcher.setFeedWheel(kLaunchFeederSpeed);
+    //m_launcher.setLaunchWheel(kLauncherSpeed);
+    //m_launcher.setFeedWheel(kLaunchFeederSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_launcher.getLaunchCommand().execute();
     // There is nothing we need this command to do on each iteration. You could remove this method
     // and the default blank method
     // of the base class will run.

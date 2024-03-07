@@ -3,6 +3,7 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<< Updated upstream
         "x": 1.1623862961500528,
         "y": 3.7595346747044127
       },
@@ -10,12 +11,22 @@
       "nextControl": {
         "x": 2.0609772649787947,
         "y": 3.7595346747044127
+=======
+        "x": 1.3467535368805683,
+        "y": 5.730798704687417
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3467535368805683,
+        "y": 6.730798704687419
+>>>>>>> Stashed changes
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
+<<<<<<< Updated upstream
         "x": 5.0,
         "y": 5.0
       },
@@ -26,30 +37,90 @@
       "nextControl": {
         "x": 6.0,
         "y": 4.0
+=======
+        "x": 4.0,
+        "y": 6.0
+      },
+      "prevControl": {
+        "x": 2.93508657889038,
+        "y": 5.585346960913625
+      },
+      "nextControl": {
+        "x": 4.931850867059291,
+        "y": 6.36284151025047
+>>>>>>> Stashed changes
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
+<<<<<<< Updated upstream
         "x": 7.0,
         "y": 1.0
       },
       "prevControl": {
         "x": 6.75,
         "y": 2.5
+=======
+        "x": 2.498731347569003,
+        "y": 4.5497305452442225
+      },
+      "prevControl": {
+        "x": 3.8773632083054403,
+        "y": 5.376681493263764
+      },
+      "nextControl": {
+        "x": 1.120099486832566,
+        "y": 3.7227795972246813
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.0267597005782252,
+        "y": 5.486439775147445
+      },
+      "prevControl": {
+        "x": 1.0734295937053955,
+        "y": 4.604609686186063
+>>>>>>> Stashed changes
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
+<<<<<<< Updated upstream
   "rotationTargets": [],
   "constraintZones": [],
+=======
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 90.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+>>>>>>> Stashed changes
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 3.2,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -60,6 +131,9 @@
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
-  "useDefaultConstraints": false
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
 }

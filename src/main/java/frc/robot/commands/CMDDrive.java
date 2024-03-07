@@ -56,6 +56,11 @@
     
    }
 
+<<<<<<< Updated upstream
+=======
+  private CommandXboxController OIDriver1Controller = RobotContainer.getDriverController1();
+  private final SUBDrive kSubDrive; 
+>>>>>>> Stashed changes
 
  /**
   * Executes the robot's driving behavior.
@@ -71,9 +76,21 @@
    SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
 
     //Get joystick input values and apply deadband
+<<<<<<< Updated upstream
    y = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightY(), 0.15);
    x = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightX(), 0.15);
    turn = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getLeftX(), 0.15);
+=======
+    if (RobotContainer.getControlMode() == ControlMode.Drone) {
+      y = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightY(), 0.1);
+      x = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightX(), 0.1);
+      turn = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getLeftX(), 0.1);
+    } else {
+      y = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getLeftY(), 0.1);
+      x = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getLeftX(), 0.1);
+      turn = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightX(), 0.1);
+    }
+>>>>>>> Stashed changes
 
    /*/ Determine if robot is at setpoint and needs to rotate to angle
    /boolean isAtSetpoint = turnController.atSetpoint();
@@ -125,6 +142,7 @@
  */
  double currentRotationRate = turn;
     //Drive the robot based on joystick input and rotation rate
+<<<<<<< Updated upstream
    if (y == 0 && x == 0 && turn == 0) { //&& isAtSetpoint) {
      RobotContainer.m_robotDrive.setX();
    } else {
@@ -136,6 +154,19 @@
          RobotContainer.rateLimitChooser.getSelected()
      );
    }
+=======
+    if (y == 0 && x == 0 && turn == 0) { //&& isAtSetpoint) {
+      kSubDrive.setX();
+    } else {
+      kSubDrive.drive(
+        -y *0.5,
+        -x * 0.5,
+        currentRotationRate *0.5,
+        RobotContainer.isFieldOriented(),
+        RobotContainer.isRateLimited()
+      );
+    }
+>>>>>>> Stashed changes
 
     //Update past turn value
    pastTurn = turn;

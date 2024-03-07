@@ -32,8 +32,64 @@ public class SUBArm extends SubsystemBase {
 
   ) {
 
+<<<<<<< Updated upstream
 //armMotor2.follow(armMotor1);
 pid.setTolerance(1);
+=======
+
+    armMotor1.sparkMax.restoreFactoryDefaults();
+    armMotor1.setSmartCurrentLimit(ArmConstants.kMotorCurrentLimit);
+    armMotor2.setSmartCurrentLimit(ArmConstants.kMotorCurrentLimit);
+
+    // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
+    m_turningPIDController = armMotor1.sparkMax.getPIDController();
+    m_turningPIDController.setFeedbackDevice(encoder);
+    m_turningPIDController.setOutputRange(-1,1);
+
+    // Apply position and velocity conversion factors for the driving encoder. The
+    // native units for position and velocity are rotations and RPM, respectively,
+    // but we want meters and meters per second to use with WPILib's swerve APIs.
+    // Apply position and velocity conversion factors for the turning encoder. We
+    // want these in radians and radians per second to use with WPILib's swerve
+    // APIs.
+
+
+    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // the steering motor in the MAXSwerve Module.
+    encoder.setInverted(true);
+
+    // Enable PID wrap around for the turning motor. This will allow the PID
+    // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
+    // to 10 degrees will go through 0 rather than the other direction which is a
+    // longer route.
+    m_turningPIDController.setPositionPIDWrappingEnabled(true);
+    m_turningPIDController.setPositionPIDWrappingMinInput(0);
+    m_turningPIDController.setPositionPIDWrappingMaxInput(1);
+
+    // Set the PID gains for the driving motor. Note these are example gains, and you
+    // may need to tune them for your own robot!
+
+
+    // Set the PID gains for the turning motor. Note these are example gains, and you
+    // may need to tune them for your own robot!
+    m_turningPIDController.setP(ArmConstants.kP);
+    m_turningPIDController.setI(ArmConstants.kI);
+    m_turningPIDController.setD(ArmConstants.kD);
+    m_turningPIDController.setFF(ModuleConstants.kTurningFF);
+
+    armMotor1.sparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
+    armMotor1.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+
+    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // operation, it will maintain the above configurations.
+    armMotor1.sparkMax.burnFlash();
+
+
+armMotor2.follow(armMotor1);
+armMotor1.sparkMax.setIdleMode(IdleMode.kBrake);
+armMotor2.sparkMax.setIdleMode(IdleMode.kBrake);
+m_turningPIDController.setReference(encoder.getPosition(), CANSparkMax.ControlType.kPosition);
+>>>>>>> Stashed changes
 
 
   }
@@ -47,6 +103,7 @@ pid.setTolerance(1);
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+<<<<<<< Updated upstream
     SmartDashboard.setDefaultNumber("armP", Constants.ArmConstants.kP);
     SmartDashboard.setDefaultNumber("armI", Constants.ArmConstants.kI);
     SmartDashboard.setDefaultNumber("armD", Constants.ArmConstants.kD);
@@ -57,5 +114,13 @@ pid.setTolerance(1);
 
     //double motorPower = pid.calculate(encoder.getPosition(), setpoint);
     //armMotor1.set(motorPower);
+=======
+    SmartDashboard.putNumber("armP", Constants.ArmConstants.kP);
+    SmartDashboard.putNumber("armI", Constants.ArmConstants.kI);
+    SmartDashboard.putNumber("armD", Constants.ArmConstants.kD);
+    SmartDashboard.putNumber("pos", encoder.getPosition());
+    m_turningPIDController.setReference(setpoint, CANSparkMax.ControlType.kPosition);
+
+>>>>>>> Stashed changes
   }
 }

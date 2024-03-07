@@ -6,7 +6,11 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+<<<<<<< Updated upstream
 import com.pathplanner.lib.path.PathPlannerPath;
+=======
+import com.pathplanner.lib.path.PathConstraints;
+>>>>>>> Stashed changes
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -25,12 +29,21 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LauncherConstants;
 import frc.robot.Constants.OIConstants;
+<<<<<<< Updated upstream
  import frc.robot.commands.CMDAlign;
  import frc.robot.commands.CMDDrive;
 import frc.robot.commands.CMDShooter;
 import frc.robot.commands.LaunchNote;
 import frc.robot.commands.PrepareLaunch;
  import frc.robot.subsystems.DriveSubsystem;
+=======
+import frc.robot.commands.CMDArm;
+import frc.robot.commands.CMDClimb;
+import frc.robot.commands.CMDDrive;
+import frc.robot.commands.CMDShooter;
+import frc.robot.commands.LaunchNote;
+import frc.robot.commands.PrepareLaunch;
+>>>>>>> Stashed changes
 import frc.robot.subsystems.SUBArm;
 import frc.robot.subsystems.SUBShooter;
 import frc.robot.subsystems.SUBVision;
@@ -45,6 +58,7 @@ import frc.utils.RoaringUtils.DeadzoneUtils;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+<<<<<<< Updated upstream
    //The robot's subsystems
    public final static DriveSubsystem m_robotDrive = new DriveSubsystem();
      public static final CMDDrive driveRobotCommand = new CMDDrive();
@@ -59,6 +73,32 @@ public class RobotContainer {
 
 
 
+=======
+  //The robot's subsystems
+  private static final SUBDrive kRobotDrive = new SUBDrive();
+  private static final CMDDrive kDriveRobotCommand = new CMDDrive(kRobotDrive);
+  private static final SUBShooter kSUBShooter = new SUBShooter();
+  private static final CMDShooter kCMDShooter = new CMDShooter(kSUBShooter);
+  private static final SUBVision kSUBVision = new SUBVision();
+  private static final SUBArm kSUBArm = new SUBArm();
+  private static final CMDArm kCMDArm = new CMDArm(kSUBArm);
+  private static final SUBClimb kSUBClimb = new SUBClimb();
+  private static final CMDClimb kCMDClimb = new CMDClimb(kSUBClimb);
+
+  private static final PathConstraints kPathconstraints = new PathConstraints(5, 3, 360, 15);
+  private final SUBPoseEstimator kPoseEstimator = new SUBPoseEstimator( kRobotDrive,kSUBVision);
+  public enum RobotMode {
+    KitBot, CompBot
+  }
+  public enum ControlMode {
+    Drone, Game
+  }
+  private static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
+  private static SendableChooser<ControlMode> controlChooser = new SendableChooser<ControlMode>();
+  private static SendableChooser<Boolean> rateLimitChooser = new SendableChooser<Boolean>();
+  private static SendableChooser<RobotMode> robotChooser = new SendableChooser<RobotMode>();
+  private static SendableChooser<Command> autoChooser;
+>>>>>>> Stashed changes
   
     public static SendableChooser<Boolean> fieldOrientedChooser = new SendableChooser<Boolean>();
     public static SendableChooser<String> controlChooser = new SendableChooser<String>();
@@ -101,7 +141,14 @@ public class RobotContainer {
     );
 
 
+<<<<<<< Updated upstream
      // Configure the button bindings
+=======
+     NamedCommands.registerCommand("Take Note", kSUBShooter.getIntakeCommand().withTimeout(1));
+     NamedCommands.registerCommand("Shoot Note", kSUBShooter.getIdleCommand()
+      .withTimeout(LauncherConstants.kLauncherDelay)
+      .andThen(kSUBShooter.getLaunchCommand().withTimeout(LauncherConstants.kLauncherDelay)));
+>>>>>>> Stashed changes
 
             NamedCommands.registerCommand("Intake", m_SUBShooter.getIntakeCommand().withTimeout(1));
  
@@ -116,11 +163,17 @@ public class RobotContainer {
     SmartDashboard.putData("Rate limit",rateLimitChooser);
     SmartDashboard.putData("Field oriented",fieldOrientedChooser);
     SmartDashboard.putData("Controls", controlChooser);
+<<<<<<< Updated upstream
+=======
+    SmartDashboard.putData("Robot Select", robotChooser);
+    
+>>>>>>> Stashed changes
 
     configureButtonBindings();
    //SendableChooser<Command> autoPathChooser = AutoBuilder.buildAutoChooser();
     //SmartDashboard.putData("Path follower", autoPathChooser);
     // Configure default commands
+<<<<<<< Updated upstream
     m_SUBShooter.setDefaultCommand(m_CMDShooter);
      m_robotDrive.setDefaultCommand(
        //   The left stick controls translation of the robot.
@@ -135,6 +188,22 @@ public class RobotContainer {
              m_robotDrive));*/
              driveRobotCommand);
             
+=======
+    kSUBShooter.setDefaultCommand(kCMDShooter);
+    kRobotDrive.setDefaultCommand(kDriveRobotCommand);
+    kSUBArm.setDefaultCommand(kCMDArm);
+    kPoseEstimator.register();
+    kSUBVision.register();
+    kSUBVision.periodic();
+    kPoseEstimator.periodic();
+    kSUBClimb.setDefaultCommand(kCMDClimb);
+
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("auto", autoChooser);
+    
+    configureButtonBindings();
+>>>>>>> Stashed changes
   }
 
   /**
@@ -152,6 +221,7 @@ public class RobotContainer {
              () -> m_robotDrive.setX(),
              m_robotDrive));
 
+<<<<<<< Updated upstream
 
 
            m_driverController
@@ -168,6 +238,20 @@ public class RobotContainer {
 //m_driverController2.y().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kRaisedPosition), m_SUBArm));
 //m_driverController2.a().onTrue(new RunCommand(()-> m_SUBArm.setPosition(ArmConstants.kLowerPosition), m_SUBArm));
 
+=======
+    //OIDriverController1.rightTrigger(0.1)
+    //  .whileTrue(AutoBuilder.pathfindToPose(new Pose2d(1.75,5.5,Rotation2d.fromDegrees(180)), kPathconstraints));
+    OIDriverController2.y().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kAmpPosition), kSUBArm));
+    OIDriverController2.a().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kIntakeUpPosition), kSUBArm).withTimeout(0.5).andThen(()-> kSUBArm.setPosition(ArmConstants.kIntakePosition)));
+    //OIDriverController2.b().whileTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kSpeakerPosition),kSUBArm).withTimeout(1).andThen(kSUBShooter.getLaunchCommand()).withTimeout(1));
+    OIDriverController2.x().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kHoldPosition), kSUBArm));
+    OIDriverController2.b().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kSpeakerPosition), kSUBArm));
+
+    // OIDriverController1.leftBumper().whileTrue(new RunCommand(()-> kSUBClimb.setLeftHookPosition(0.1), kSUBClimb));
+    // OIDriverController1.leftTrigger().whileTrue(new RunCommand(()-> kSUBClimb.setLeftHookPosition(-0.1), kSUBClimb));
+    // OIDriverController1.rightBumper().whileTrue(new RunCommand(()-> kSUBClimb.setRightHookPosition(0.1), kSUBClimb));
+    // OIDriverController1.rightTrigger().whileTrue(new RunCommand(()-> kSUBClimb.setRightHookPosition(-0.1), kSUBClimb));
+>>>>>>> Stashed changes
   }
 
   /**
@@ -176,7 +260,40 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+<<<<<<< Updated upstream
         m_robotDrive.resetOdometry(PathPlannerPath.fromPathFile("Line").getPreviewStartingHolonomicPose());
       return AutoBuilder.buildAuto("Line");
     }
+=======
+    return autoChooser.getSelected();
+  }
+
+  public static CommandXboxController getDriverController1() {
+    return new CommandXboxController(OIConstants.kDriverControllerPort);
+  }
+
+  public static CommandXboxController getDriverController2() {
+    return new CommandXboxController(OIConstants.kDriverControllerPort2);
+  }
+
+  public static RobotMode getRobotMode() {
+    return robotChooser.getSelected();
+  }
+
+  public static ControlMode getControlMode() {
+    return controlChooser.getSelected();
+  }
+
+  public static boolean isFieldOriented() {
+    return fieldOrientedChooser.getSelected();
+  }
+
+  public static boolean isRateLimited() {
+    return rateLimitChooser.getSelected();
+  }
+
+  public static SUBDrive getDriveSubsystem() {
+    return kRobotDrive;
+  }
+>>>>>>> Stashed changes
 }

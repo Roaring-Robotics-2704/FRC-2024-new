@@ -20,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": null
           }
         },
         {
@@ -30,9 +30,21 @@
           }
         },
         {
+<<<<<<< Updated upstream:src/main/deploy/pathplanner/autos/Line.auto
           "type": "path",
           "data": {
             "pathName": "step 2"
+=======
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Note"
+>>>>>>> Stashed changes:src/main/deploy/pathplanner/autos/box.auto
           }
         }
       ]

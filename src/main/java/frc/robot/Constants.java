@@ -121,7 +121,7 @@ public final class Constants {
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kTurningP = 3.75;
+    public static final double kTurningP = 3.74;
     public static final double kTurningI = 0;
     public static final double kTurningD = 0;
     public static final double kTurningFF = 0;
@@ -171,6 +171,7 @@ public final class Constants {
   }
   public static class LauncherConstants {
     // PWM ports/CAN IDs for motor controllers
+<<<<<<< Updated upstream
     public static final int kFeederID = 9;
     public static final int kLauncherID = 10;
 
@@ -184,6 +185,28 @@ public final class Constants {
     public static final double kLaunchFeederSpeed = 1;
     public static final double kIntakeLauncherSpeed = -1;
     public static final double kIntakeFeederSpeed = -.2;
+=======
+    public static final int kFeederID = 11;
+    public static final int kLauncherID1 = 12;
+    public static final int kLauncherID2 = 13;
+    public static final int kLauncherCurrentLimit = 30;
+    public static final int kFeedCurrentLimit = 30;
+
+    // Speeds for wheels when intaking and launching. Intake speeds are negative to run the wheels
+    // in reverse
+    public static final double kLauncherSpeed = 0.5;
+    public static final double kLaunchFeederSpeed = 0.4;
+    public static final double kIntakeLauncherSpeed = -1.5;
+    public static final double kIntakeFeederSpeed = -.5;
+    public static final double kLauncherDelay = 0.5;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+
+
+  }
+>>>>>>> Stashed changes
 
     public static final double kLauncherDelay = 1.5;
   }
@@ -191,11 +214,23 @@ public final class Constants {
     
   }
   public static class ArmConstants {
+<<<<<<< Updated upstream
     public static final int kArmMotor1 = 6;
     public static final int kArmMotor2 = 5;
     public static final double kRaisedPosition = 1.571;
     public static final double kLowerPosition = 0;
     public static final double kP = 0.1;
+=======
+    public static final int kArmMotor1 = 9;
+    public static final int kArmMotor2 = 10;
+    public static final double kAmpPosition = Units.degreesToRotations(78);//80 is top
+    public static final double kIntakePosition = Units.degreesToRotations(-3);
+    public static final double kIntakeUpPosition = kIntakePosition + Units.degreesToRotations(5);
+    public static final double kSpeakerPosition = Units.degreesToRotations(20);
+    public static final double kInsidePosition = 0.2;
+    public static final double kHoldPosition = Units.degreesToRotations(6.5);
+    public static final double kP = 2.7;
+>>>>>>> Stashed changes
     public static final double kI = 0;
     public static final double kD = 0;
 
