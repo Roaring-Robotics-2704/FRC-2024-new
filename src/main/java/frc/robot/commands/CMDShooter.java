@@ -14,9 +14,12 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SUBShooter;
 import frc.robot.subsystems.SUBVision;
 
+
+
 public class CMDShooter extends Command {
   private SUBShooter subShooter;
   private SUBVision subVision;
+
   private static CommandXboxController xbox = RobotContainer.getDriverController2();
   /** Creates a new CMDShooter. */
   public CMDShooter(SUBShooter sub,SUBVision vision) {
@@ -38,7 +41,6 @@ public class CMDShooter extends Command {
     double feedvalue = 0;
     double launchvalue= 0;
     if (xbox.getHID().getLeftTriggerAxis()==1) {feedvalue=0.7;}
-    if (xbox.getHID().getLeftBumper()) {feedvalue=-0.5; launchvalue =-.25;}
     //if (xbox.rightTrigger().getAsBoolean()) {launchvalue=1;}
     if (xbox.getHID().getRightTriggerAxis()==1) {launchvalue=0.1;feedvalue=0.5; subVision.setLights(VisionLEDMode.kOff);} else {
     subVision.setLights(VisionLEDMode.kOff);}

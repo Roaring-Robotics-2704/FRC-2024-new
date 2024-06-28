@@ -77,6 +77,7 @@ public class RobotContainer {
   //The driver's controller
   private static CommandXboxController OIDriverController1 = new CommandXboxController(OIConstants.kDriverControllerPort);
   private static CommandXboxController OIDriverController2 = new CommandXboxController(OIConstants.kDriverControllerPort2);
+  public static boolean intakeMode = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -180,7 +181,11 @@ public class RobotContainer {
     OIDriverController2.x().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kHoldPosition), kSUBArm));
     OIDriverController2.b().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kSpeakerPosition), kSUBArm));
     OIDriverController1.a().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kInsidePosition), kSUBArm));
-  }
+
+    if(intakeMode) {OIDriverController2.povUp().onTrue(new RunCommand(()->kSUBShooter.setWheels(0.5,0.0),kSUBShooter).repeatedly().withTimeout(1)); }
+    ;
+    if(!intakeMode) {OIDriverController2.povUp().whileTrue(new RunCommand(()->kSUBShooter.setWheels(-0.5,-0.25),kSUBShooter));}
+    }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
