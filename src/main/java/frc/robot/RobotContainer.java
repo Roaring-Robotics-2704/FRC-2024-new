@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.LauncherConstants.kIntakeDuration;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 //import com.pathplanner.lib.path.PathConstraints;
@@ -11,11 +13,9 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,7 +77,6 @@ public class RobotContainer {
   //The driver's controller
   private static CommandXboxController OIDriverController1 = new CommandXboxController(OIConstants.kDriverControllerPort);
   private static CommandXboxController OIDriverController2 = new CommandXboxController(OIConstants.kDriverControllerPort2);
-  public static boolean intakeMode = false;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -181,10 +180,13 @@ public class RobotContainer {
     OIDriverController2.x().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kHoldPosition), kSUBArm));
     OIDriverController2.b().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kSpeakerPosition), kSUBArm));
     OIDriverController1.a().onTrue(new RunCommand(()-> kSUBArm.setPosition(ArmConstants.kInsidePosition), kSUBArm));
+    OIDriverController2.leftBumper().whileTrue(new RunCommand(()->kSUBShooter.setWheels(-0.5,-0.25),kSUBShooter));
+    OIDriverController2.povUp().onTrue(new RunCommand(()->kSUBShooter.setWheels(0.5,0.0),kSUBShooter).repeatedly().withTimeout(kIntakeDuration));
 
-    if(intakeMode) {OIDriverController2.povUp().onTrue(new RunCommand(()->kSUBShooter.setWheels(0.5,0.0),kSUBShooter).repeatedly().withTimeout(1)); }
-    ;
-    if(!intakeMode) {OIDriverController2.povUp().whileTrue(new RunCommand(()->kSUBShooter.setWheels(-0.5,-0.25),kSUBShooter));}
+// When Left Bumper is pressed: if intakeMode is true, intake will position note for speaker. if intakeMode is false, the intake will spit out the note.
+  
+
+   
     }
 
   /**

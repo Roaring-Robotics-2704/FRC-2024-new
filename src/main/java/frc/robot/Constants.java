@@ -240,6 +240,7 @@ public final class Constants {
     public static final double kLaunchFeederSpeed = 0.4;
     public static final double kIntakeLauncherSpeed = -1.5;
     public static final double kIntakeFeederSpeed = -.5;
+    public static final double kIntakeDuration = 0.1;
     public static final double kLauncherDelay = 0.5;
     public static final double kP = 0.0001;
     public static final double kPLow = 0.00008;
