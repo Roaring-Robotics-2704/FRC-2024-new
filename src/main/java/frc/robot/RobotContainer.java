@@ -118,7 +118,47 @@ AutoBuilder.configureHolonomic(
                 robotDrive // Reference to this subsystem to set requirements
         );
 
+<<<<<<< Updated upstream
     fieldOrientedChooser.setDefaultOption("Field Oriented", true);
+=======
+    AutoBuilder.configureHolonomic(
+      kPoseEstimator::getCurrentPose,  //Robot pose supplier
+      kPoseEstimator::setCurrentPose, // Method to reset odometry (will be called if your auto has a starting pose)
+      kRobotDrive::getspeed, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      kRobotDrive::driveRobotRelative,//  Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        new PIDConstants(10, 0.0, 0.0), // Translation PID constants
+        new PIDConstants(10, 0.0, 0.0),//  Rotation PID constants
+        2,//  Max module speed, in m/s
+        Units.inchesToMeters(18.2), // Drive base radius in meters. Distance from robot center to furthest module.
+        new ReplanningConfig() // Default path replanning config. See the API for the options here
+      ),
+      () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      kRobotDrive // Reference to this subsystem to set requirements
+    );
+   // Configure the button bindings
+
+    NamedCommands.registerCommand("Take Note", kSUBShooter.getIntakeCommand().repeatedly());
+    NamedCommands.registerCommand("Amp Note", new RunCommand(()->kSUBShooter.setWheels(0.5,0.1), kSUBShooter).repeatedly().withTimeout(1.25));//.andThen(new RunCommand(()->kSUBShooter.setWheels(0.0,0.0), kSUBShooter)).withTimeout(0.1));
+    NamedCommands.registerCommand("Arm Intake", new RunCommand(()->kSUBArm.setPosition(ArmConstants.kIntakePosition), kSUBArm).repeatedly().withTimeout(1));//.until(()->kSUBArm.isAtSetpoint()));
+    NamedCommands.registerCommand("Arm Amp", new RunCommand(()->kSUBArm.setPosition(ArmConstants.kAmpPosition), kSUBArm).repeatedly().withTimeout(1));//.until(()->kSUBArm.isAtSetpoint()));
+    NamedCommands.registerCommand("Arm Speaker", new RunCommand(()->kSUBArm.setPosition(ArmConstants.kSpeakerPosition+Units.degreesToRadians(0)), kSUBArm).withTimeout(1));
+    NamedCommands.registerCommand("Speaker Note", new RunCommand(()->kSUBShooter.setWheels(0.0,1.0),kSUBShooter).repeatedly().withTimeout(3).andThen(new RunCommand(()->kSUBShooter.setWheels(0.6,1.0), kSUBShooter).repeatedly().withTimeout(1)));
+      // ()->kSUBShooter.setLaunchWheel(1), kSUBShooter).repeatedly().withTimeout(3)
+      // .andThen(new RunCommand(()->kSUBShooter.setWheels(0.6,1.0),kSUBShooter).repeatedly().withTimeout(1)));
+    fieldOrientedChooser.setDefaultOption("Field Oriented", true);  
+    NamedCommands.registerCommand("Bring Note Back", new RunCommand(()->kSUBShooter.setWheels(-0.1,-0.1), kSUBShooter).repeatedly().alongWith(new RunCommand(()->kSUBArm.setPosition(ArmConstants.kIntakeUpPosition), kSUBArm)).withTimeout(0.75).andThen(new RunCommand(()->kSUBShooter.setWheels(-0.0,-0.0), kSUBShooter).withTimeout(0.1)));
+>>>>>>> Stashed changes
     fieldOrientedChooser.addOption("Robot Oriented", false);
 
     rateLimitChooser.setDefaultOption("False", false);
