@@ -73,6 +73,7 @@ public void execute() {
   x = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getRightX(), 0.15);
   turn = RoaringUtils.DeadzoneUtils.LinearDeadband(OIDriver1Controller.getLeftX(), 0.15);
 
+<<<<<<< Updated upstream
   // Determine if robot is at setpoint and needs to rotate to angle
   boolean isAtSetpoint = turnController.atSetpoint();
   if (isAtSetpoint && rotateToAngle) {
@@ -81,6 +82,61 @@ public void execute() {
     rotateToAngle = true;
   } else {
     rotateToAngle = false;
+=======
+    //Adjust setpoint based on POV input
+    if (OIDriver1Controller.getHID().getPOV()== POVDirections.POVTop) {
+      turnController.setSetpoint(0.0f);
+      rotateToAngle = true;
+    } else if (OIDriver1Controller.getHID().getPOV()== POVDirections.POVRight) {
+      turnController.setSetpoint(-90.0f);
+      rotateToAngle = true;
+    } else if (OIDriver1Controller.getHID().getPOV()== POVDirections.POVBottom) {
+      turnController.setSetpoint(179.9f);
+      rotateToAngle = true;
+    } else if (OIDriver1Controller.getHID().getPOV()== POVDirections.POVLeft) {
+      turnController.setSetpoint(90.0f);
+      rotateToAngle = true;
+    }
+
+    // Calculate rotation rate based on setpoint and joystick input
+    double currentRotationRate;
+    if (rotateToAngle) {
+      currentRotationRate = MathUtil.clamp(turnController.calculate(kSubDrive.getHeading()), -1, 1);
+    } else {
+      currentRotationRate = -turn;
+    }
+
+    //Calculate rotation rate if turn value is 0
+    if (turn == 0) {
+      currentRotationRate = MathUtil.clamp(turnController.calculate(kSubDrive.getHeading()), -1, 1);
+    }
+ 
+    //currentRotationRate = turn;
+    //Drive the robot based on joystick input and rotation rate
+    if (y == 0 && x == 0 && turn == 0) { //&& isAtSetpoint) {
+      kSubDrive.setX();
+    } else {
+      kSubDrive.drive(
+        -y *1,
+        -x *1,
+        currentRotationRate *1,
+        RobotContainer.isFieldOriented(),
+        RobotContainer.isRateLimited()
+      );
+    }
+
+    //Update past turn value
+    pastTurn = turn;
+
+    //Reset gyro, adjust setpoint, and set rumble if "Y" button is pressed
+    if (OIDriver1Controller.getHID().getYButton()) {
+      kSubDrive.resetGyro();
+      turnController.setSetpoint(kSubDrive.getHeading());
+      OIDriver1Controller.getHID().setRumble(RumbleType.kBothRumble, 1);
+    } else {
+      OIDriver1Controller.getHID().setRumble(RumbleType.kBothRumble,0);
+    }
+>>>>>>> Stashed changes
   }
 
   // Adjust setpoint if turn value changes
