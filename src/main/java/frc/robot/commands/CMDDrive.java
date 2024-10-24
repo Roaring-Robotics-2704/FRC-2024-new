@@ -60,7 +60,7 @@ public class CMDDrive extends Command {
     turnController.setSetpoint(kSubDrive.getHeading());
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && !alliance.isEmpty()) {
-      if (alliance.get() == DriverStation.Alliance.Blue) {
+      if (alliance.get() == DriverStation.Alliance.Red) {
         invertDriver = -1;
       } else {
         invertDriver = 1;
